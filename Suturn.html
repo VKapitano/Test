@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <title>Saturn s prstenom – Three.js</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <!-- Three.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script>
+    // Scena, kamera, renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75, window.innerWidth / window.innerHeight, 0.1, 1000
+    );
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Saturn (sfera)
+    const planetGeometry = new THREE.SphereGeometry(1, 32, 32);
+    const planetMaterial = new THREE.MeshStandardMaterial({ color: 0xf5c56d });
+    const saturn = new THREE.Mesh(planetGeometry, planetMaterial);
+    scene.add(saturn);
+
+    // Prsten (torus)
+    const ringGeometry = new THREE.TorusGeometry(1.4, 0.1, 2, 100);
+    const ringMaterial = new THREE.MeshStandardMaterial({
+      color: 0xd3b984,
+      side: THREE.DoubleSide // da se vidi s obje strane
+    });
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    ring.rotation.x = Math.PI / 2.5; // nagib prstena
+    scene.add(ring);
+
+    // Svjetlo
+    const light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(5, 5, 5);
+    scene.add(light);
+
+    // Kamera pozicija
+    camera.position.z = 5;
+
+    // Animacija
+    function animate() {
+      requestAnimationFrame(animate);
+      ring.rotation.z += 0.01; // rotacija prstena
+      saturn.rotation.y += 0.005; // lagana rotacija Saturna
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
